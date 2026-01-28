@@ -41,53 +41,72 @@ const FileUpload = ({ onUploadSuccess }) => {
     };
 
     return (
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-            <h3 className="text-lg font-semibold mb-4 text-slate-800 flex items-center gap-2">
-                <Upload className="w-5 h-5 text-blue-600" />
+        <div className="p-6">
+            <h3 className="text-lg font-bold mb-5 text-slate-800 flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
+                    <Upload className="w-4 h-4 text-indigo-600" />
+                </div>
                 Upload Dataset
             </h3>
 
             <div className="flex flex-col gap-4">
-                <div className="relative border-2 border-dashed border-slate-300 rounded-lg p-6 hover:bg-slate-50 transition-colors text-center cursor-pointer">
+                <div className={`relative border-2 border-dashed rounded-xl p-8 transition-all duration-200 text-center cursor-pointer group ${file ? 'border-indigo-400 bg-indigo-50/50' : 'border-slate-300 hover:border-indigo-400 hover:bg-slate-50'
+                    }`}>
                     <input
                         type="file"
                         accept=".csv, .xlsx, .xls"
                         onChange={handleFileChange}
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                     />
-                    <div className="flex flex-col items-center gap-2 pointer-events-none">
+                    <div className="flex flex-col items-center gap-3 pointer-events-none transition-transform group-hover:scale-105 duration-300">
                         {file ? (
-                            <FileText className="w-8 h-8 text-blue-500" />
+                            <div className="p-3 bg-white rounded-full shadow-md">
+                                <FileText className="w-8 h-8 text-indigo-500" />
+                            </div>
                         ) : (
-                            <Upload className="w-8 h-8 text-slate-400" />
+                            <div className="p-3 bg-white rounded-full shadow-sm">
+                                <Upload className="w-8 h-8 text-slate-400 group-hover:text-indigo-500" />
+                            </div>
                         )}
-                        <p className="text-sm text-slate-600 font-medium">
-                            {file ? file.name : "Click or drag CSV or Excel here"}
-                        </p>
+                        <div className="space-y-1">
+                            <p className="text-sm font-semibold text-slate-700">
+                                {file ? file.name : "Click or drag file here"}
+                            </p>
+                            {!file && (
+                                <p className="text-xs text-slate-500">Supports CSV & Excel</p>
+                            )}
+                        </div>
                     </div>
                 </div>
 
                 {error && (
-                    <div className="text-sm text-red-600 flex items-center gap-1 bg-red-50 p-2 rounded">
-                        <XCircle className="w-4 h-4" /> {error}
+                    <div className="text-sm text-red-600 flex items-center gap-2 bg-red-50 p-3 rounded-lg border border-red-100">
+                        <XCircle className="w-4 h-4 shrink-0" />
+                        <span className="leading-tight">{error}</span>
                     </div>
                 )}
 
                 {success && (
-                    <div className="text-sm text-green-600 flex items-center gap-1 bg-green-50 p-2 rounded">
-                        <CheckCircle className="w-4 h-4" /> Uploaded successfully!
+                    <div className="text-sm text-emerald-600 flex items-center gap-2 bg-emerald-50 p-3 rounded-lg border border-emerald-100">
+                        <CheckCircle className="w-4 h-4 shrink-0" />
+                        <span className="font-medium">Uploaded & analyzed!</span>
                     </div>
                 )}
 
                 <button
                     onClick={handleUpload}
                     disabled={!file || uploading}
-                    className={`w-full py-2.5 rounded-lg font-medium transition-all ${!file || uploading
+                    className={`w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 transform active:scale-[0.98] ${!file || uploading
                         ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                        : 'bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-lg'
+                        : 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white hover:shadow-lg hover:shadow-indigo-500/25'
                         }`}
                 >
-                    {uploading ? 'Training Model...' : 'Upload & Train'}
+                    {uploading ? (
+                        <span className="flex items-center justify-center gap-2">
+                            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                            Processing...
+                        </span>
+                    ) : 'Upload & Process'}
                 </button>
             </div>
         </div>
